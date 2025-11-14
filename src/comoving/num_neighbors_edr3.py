@@ -8,12 +8,13 @@
 
 from astropy.table import Table
 import multiprocessing, psutil
+import numpy as np
 from sklearn.neighbors import BallTree
 from find_binaries_edr3 import duplicates_msk, unique_value_msk, fetch_table_element, get_delta_mu_and_sigma
  
 # #since we're running this in the .ipynb namespace, we don't need to read in the file  #might not be true
 #changed to csv instead of fits.gz
-tab = Table.read('raw_data/edr3_parallax_snr5_goodG.csv') # 64407853 sources
+tab = Table.read('edr3_parallax_snr5_goodG.csv') # 64407853 sources
 
 size_max_pc = 5 # max projected separation out to which to search
 dispersion_max_kms = 5 # max velocity difference in kms

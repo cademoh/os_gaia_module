@@ -18,12 +18,13 @@
 from astropy.table import Table
 import multiprocessing, psutil
 from sklearn.neighbors import BallTree
+import numpy as np
 
 parallax_sigma_limit = 3 # only accept pair with parallaxes within 3 sigma of each other
 theta_arcsec_min = 4 # limit below which we'll accept parallaxes within 6 sigma of each other.
 
 #since we're running this in the .ipynb namespace, we don't need to read in the file  
-tab = Table.read('raw_data/edr3_parallax_snr5_goodG.csv')  # 64407853 elements
+tab = Table.read('edr3_parallax_snr5_goodG.csv')  # 64407853 elements
 
 # remove stars that have too many neighbors, as defined in section 2.1 
 # if you want to look at the "initial candidates" sample, including clusters, comment this out. 
