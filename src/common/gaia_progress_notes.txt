@@ -1,39 +1,37 @@
-### All Work Folders
--Chemistry
--comoving
--dGal
--dr3rv
--gcns
--giants
--globularstars
--nearencounters
--openclusters
--solartwins
--stellarclusters
--variablestars
--youngstars
 
-### Fully working as .py file without needing downloaded data
+### Working as .py file without needing downloaded data
 -chemistry
 -dGal
 -gcns
+-giants
 -nearencounters
 -openclusters
 -solartwins
--youngstars
 -variablestars
+-youngstars
+
 
 ### Working as .py file but needs downloaded data (downloaded data should be in the folder with it)
 -Comoving (data: all_columns_catalog.fits.gz) ISSUE: doing a query requires some fixes to the el_badry files
--globularstars (data: clusters.zip and globclusters.csv)
+-globularstars (data: clusters folder)
 -stellarclusters (data: UCC_cat.csv.gz)
+
 
 ### Converted to .py files, still working out some kinks
 -dr3rv ISSUE: Memory error in trying to read the fits file. 
                 This may work on a more powerful machine, as querying gaia using TOP 1000 makes it all work.
--giants ISSUE: I get a "not enough memory" error when trying to create the csv, speck, and asset files
-                it may work on a more powerful machine, as the code works if i do data[:1000]
 
 
-### Successfully generate asset files
+
+to do list:
+-dr3rv currently downloading, test it once it's downloaded
+-comoving make sure the query works (all_columns_catalog.fitz.gz)
+-make sure everything is well commented, add my name to things
+
+
+### Commented and credited
+-chemistry
+- 92-100 Comoving, delete some of that, or change it to if statements
+-dGal
+-gcns
 -

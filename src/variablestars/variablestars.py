@@ -51,11 +51,11 @@ metadata['raw_data_dir'] = ''
 
 metadata['data_group_title'] = 'Variable stars'
 metadata['data_group_desc'] = 'Variable stars in the Milky Way mapped by Gaia'
-metadata['data_group_desc_long'] = 'RR Lyrae stars are excellent tracers of the oldest stars (ages ≳ 9–10 Gyr) and standard candles for measuring the distance to stellar systems that are mainly composed of an old stellar population. The Gaia Third Data Release (DR3) publishes a catalogue of full-sky RR Lyrae stars observed during the initial 34 months of science operations. They were processed through the Specific Object Study (SOS) pipeline, which was developed to validate and characterise Cepheids and RR Lyrae stars (SOS Cep&RRL) observed by Gaia.'
+metadata['data_group_desc_long'] = 'RR Lyrae stars are excellent tracers of the oldest stars (ages greater than or equal to 9/10 Gyr) and standard candles for measuring the distance to stellar systems that are mainly composed of an old stellar population. The Gaia Third Data Release (DR3) publishes a catalogue of full sky RR Lyrae stars observed during the initial 34 months of science operations. They were processed through the Specific Object Study (SOS) pipeline, which was developed to validate and characterise Cepheids and RR Lyrae stars (SOS Cep&RRL) observed by Gaia.'
 metadata['fileroot'] = 'variable_stars'
 
 file_functions.generate_license_file(metadata)
-
+file_functions.generate_asset_file(metadata)
 # %
 #query cepheid table
 
@@ -277,4 +277,4 @@ data[data['SOURCE_ID']==4685634433183799680]
 # %
 
 
-
+print("done")

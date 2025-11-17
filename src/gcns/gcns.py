@@ -1,15 +1,16 @@
-# %
 # PROCESS THE GAIA CATALOG OF NEARBY STARS:
 # https://cdsarc.cds.unistra.fr/viz-bin/cat/J/MNRAS/508/3877#/browse
 #
 #
 # ZACK REEVES
 # CREATED: 2024
+# CADE MOHRHARDT
+# UPDATED: 2025
 #
 # VERSIONS:
 #  1.1  FEB 2024 CREATE JUPYTER NOTEBOOK
+#  Python 3.12.12 OCT 2025
 
-# %
 import pandas as pd
 import numpy as np
 import sys
@@ -27,7 +28,6 @@ from common import file_functions, calculations
 
 from matplotlib import pyplot as plt, colors
 
-# %
 # Define the metadata for the data set. 
 metadata = {}
 
@@ -40,7 +40,7 @@ metadata['catalog_year'] = '2021'
 metadata['catalog_doi'] = 'doi:10.1051/0004-6361/202039498'
 metadata['catalog_bibcode'] = '2021A&A...649A...6G'
 
-metadata['prepared_by'] = 'Brian Abbott, Zack Reeves'
+metadata['prepared_by'] = 'Brian Abbott, Zack Reeves, Cade Mohrhardt'
 metadata['version'] = '1.1'
 
 metadata['dir'] = metadata['sub_project'].replace(' ', '_').lower()
@@ -52,8 +52,8 @@ metadata['data_group_desc_long'] = 'Have you ever wondered what’s out there in
 metadata['fileroot'] = 'gcns'
 
 file_functions.generate_license_file(metadata)
-print("metadata created")
-# %
+file_functions.generate_asset_file(metadata)
+
 # Define the metadata for the data set. ---- THIS IS OLD???
 # metadata = {}
 
@@ -72,9 +72,8 @@ print("metadata created")
 # metadata['data_group_desc'] = 'GCNS'
 # metadata['fileroot'] = 'gcns'
 
-# %
+
 #reading in the data
-print("about to query gaia (<5 min)")
 #log in to Gaia Server - Can change to different credentials file for a different user
 Gaia.login(credentials_file='../common/gaia_credentials.txt')
     
@@ -99,18 +98,11 @@ Gaia.remove_jobs(job.jobid)
 
 Gaia.logout()
 
-# %
 data
-print("calculations commence")
-# %
-# #read in stars.csv to remove the overlap?
-# stars = Table.read('stars.csv')
-# data.remove_rows([i for i in range(len(data)) if(data['source_id'][i] in stars['GaiaDR3'])])
 
-# %
 len(data[data['teff_gspphot']>0])
 
-# %
+
 #setting dcalc based on r_med_geo (if>500pc and photogeo exists, we choose photogeo and set dcalc to 1, else geo and dcalc to 2)
 data['dcalc'] = [1 if((not(np.ma.is_masked(data['r_med_photogeo'][i])))and(data['r_med_geo'][i]>500)) else 2 for i in range(len(data))]
 
@@ -126,18 +118,14 @@ data['bj_distance'].unit=u.pc
 #Choosing and calculating distance error based on the distance we chose
 data['e_bj_dist'] = [((data['r_hi_photogeo'][i]-data['r_lo_photogeo'][i])/2)*u.pc if((not(np.ma.is_masked(data['r_med_photogeo'][i])))and(data['r_med_geo'][i]>500)) else ((data['r_hi_geo'][i]-data['r_lo_geo'][i])/2)*u.pc for i in range(len(data))]
 
-# %
 data.remove_rows(np.where(data['bj_distance']>500)[0])
 
-# %
 #calculating distance in light years and parsecs
 calculations.get_distance(data, dist='bj_distance', use='distance')
 
-# %
 #calculating cartesian coordinates
 calculations.get_cartesian(data, ra='ra', dec='dec', pmra='pmra', pmde='pmdec', radial_velocity='radial_velocity', frame='icrs')
 
-# %
 #calculating absolute magnitudes
 #calculate absolute V mag based on apparent magnitude and distance
 data['appmag'] = data.MaskedColumn(data=data['phot_g_mean_mag'],
@@ -151,7 +139,7 @@ data['absmag'] = data.MaskedColumn(data=[data['appmag'][i]+5-5*np.log10(data['di
                              format='{:.6f}',
                              description='Absolute magnitude in Gaia G-band')
 
-# %
+
 #calculate luminosity based on absolute magnitude
 data['lum'] = [10**(1.89 - 0.4*data['absmag'][i]) for i in range(len(data))]
 small_luminosities = np.where((data['lum']>0.0) & (data['lum']<0.001))[0]
@@ -163,11 +151,8 @@ data['lum'] = data.MaskedColumn(data=data['lum'],
                              format='{:.6f}',
                              description='Stellar Luminosity')
 
-# %
 data.columns
 
-print("plots beginning")
-# %
 #setting color and visualizing
 data['color'] = data.MaskedColumn(data=data['bp_g'],
                              unit=u.solLum,
@@ -176,7 +161,7 @@ data['color'] = data.MaskedColumn(data=data['bp_g'],
                              description='Gaia BP-G color')
 plt.hist(data['color'], bins=250)
 
-# %
+
 #2D Visualization
 fig, ax = plt.subplots(1, 2)
 
@@ -193,7 +178,6 @@ fig.tight_layout()
 fig.set_size_inches(10, 4, forward=True)
 plt.show
 
-# %
 #2D Density Visualization
 fig, ax = plt.subplots(1, 2)
 
@@ -216,7 +200,6 @@ fig.tight_layout()
 fig.set_size_inches(10, 4, forward=True)
 #plt.show
 
-# %
 #construct a speck comment column
 data['speck_label'] = data.Column(data=['#__'+str(name) for name in data['source_id']], 
                                   meta=collections.OrderedDict([('ucd', 'meta.id')]),
@@ -225,35 +208,20 @@ data['speck_label'] = data.Column(data=['#__'+str(name) for name in data['source
 #construct a label column
 data['label'] = ['GaiaEDR3_'+ str(source) for source in data['source_id']]  #leaving for now in case we want to add other labels
 
-# %
 #setting texture number column
 data['texnum'] = data.Column(data=[1]*len(data), 
                                   meta=collections.OrderedDict([('ucd', 'meta.texnum')]),
                                   description='Texture Number')
 
-# %
 #Getting the column metadata
 columns = file_functions.get_metadata(data, columns=['x', 'y', 'z', 'color', 'lum', 'absmag', 'appmag', 'texnum', 'dist_ly', 'dcalc', 'u', 'v', 'w', 'speed', 'speck_label'])
 columns
 
-# %
-# #construct a metadata table
-# columns = file_functions.get_metadata(data, columns=['x', 'y', 'z', 'dist_ly', 'u', 'v', 'w', 'speck_label'])
-# columns
-print("now we make the files")
-# %
 # Print the csv file using the to_csv function in file_functions
 file_functions.to_csv(metadata, Table.to_pandas(data), columns)
 
-# %
 # Print the speck file using the to_speck function in file_functions
 file_functions.to_speck(metadata, Table.to_pandas(data), columns)
 
-# %
 # Print the label file using the to_label function in file_functions
 file_functions.to_label(metadata, Table.to_pandas(data))
-
-# %
-print("done")
-
-

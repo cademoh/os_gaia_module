@@ -31,7 +31,7 @@ job = Gaia.launch_job_async("select source_id, ra, dec, parallax, parallax_error
 data = job.get_results()
 print("we got the job")
 #writing results to a csv
-data.write('raw_data/edr3_parallax_snr5_goodG.csv')
+data.write('/edr3_parallax_snr5_goodG.csv')
 
 #Deleting job from Gaia ESA server so we don't clog the memory
 Gaia.remove_jobs(job.jobid)

@@ -56,7 +56,7 @@ metadata['fileroot'] = 'giant'
 
 file_functions.generate_license_file(metadata)
 file_functions.generate_asset_file(metadata)
-print("asset file created (7 min)")
+print("asset file created")
 # %
 #download the data from https://zenodo.org/records/7945154 
 #~12 million stars
@@ -75,7 +75,7 @@ data['dcalc'] = data.Column([3]*len(data),
                             meta=collections.OrderedDict([('ucd', 'meta.dcalc')]),
                             description='Distance Indicator: 1 indicates a Bailer-Jones photogeometric distance; 2 indicates a Bailer-Jones geometric distance; 3 indicates a Gaia parallax-based distance')
 
-print("partway through calculations (15 min)")
+print("partway through calculations (7 min)")
 # %
 #setting necessary units and calculating galactic cartesian XYZ
 data['ra'].unit=u.deg
@@ -85,7 +85,7 @@ data['pmdec'].unit=u.mas/u.yr
 data['radial_velocity'].unit=u.km/u.s
 calculations.get_cartesian(data, ra='ra', dec='dec', pmra='pmra', pmde='pmdec', radial_velocity='radial_velocity', frame='icrs')
 
-print("halfway through calulations (15 min)")
+print("halfway through calulations (7 min)")
 # %
 #setting necessary units
 data['phot_g_mean_mag'].unit=u.mag
@@ -99,7 +99,7 @@ gaia_functions.get_luminosity(data)
 data['bp_rp'] = [data['phot_bp_mean_mag'][i]-data['phot_rp_mean_mag'][i] for i in range(len(data))]
 gaia_functions.get_bp_g_color(data, color='bp_rp')
 
-print("calculations done (11 min)")
+print("calculations done (4 min)")
 # %
 data
 
@@ -166,7 +166,7 @@ data['texnum'] = data.Column(data=[1]*len(data),
 columns = file_functions.get_metadata(data, columns=['x', 'y', 'z', 'color', 'lum', 'absmag', 'appmag', 'texnum', 'dist_ly', 'dcalc', 'u', 'v', 'w', 'speed', 'speck_label'])
 columns
 
-print("plots done")
+print("plots done (6 min)")
 # %
 # Print the csv file using the to_csv function in file_functions
 file_functions.to_csv(metadata, Table.to_pandas(data), columns)

@@ -5,7 +5,8 @@
 #
 # ZACK REEVES
 # CREATED: 2024
-#
+# CADE MOHRHARDT
+# UPDATED: 2025
 # VERSIONS:
 #  1.1  JAN 2024 CREATE JUPYTER NOTEBOOK
 #  Python 3.12.12 OCT 2025
@@ -25,7 +26,6 @@
 
 # If any errors occur, consider slicing the data down to the first 1000 rows (data[:1000]) to debug
 # Can also add "select TOP 1000" to the query to grab 1000 stars for testing
-print("starting it up")
 # 
 import pandas as pd
 import numpy as np
@@ -43,7 +43,6 @@ from astropy.table import Table, vstack
 
 sys.path.insert(0, '..')
 from common import file_functions, calculations, gaia_functions
-print("if you're seeing this, the env and stuff is all good")
 # 
 # Define the metadata for the data set. 
 metadata = {}
@@ -58,7 +57,7 @@ metadata['catalog_doi'] = 'https://doi.org/10.1093/mnras/stab323'
 metadata['catalog_bibcode'] = '2021MNRAS.506.2269E'
 
 
-metadata['prepared_by'] = 'Zack Reeves (AMNH)'
+metadata['prepared_by'] = 'Zack Reeves (AMNH), Cade Mohrhardt (AMNH)'
 metadata['version'] = '1.1'
 
 metadata['dir'] = metadata['sub_project'].replace(' ', '_').lower()
@@ -93,7 +92,7 @@ file_functions.generate_asset_file(metadata)
 #Uncomment these lines if you want to see all of the columns in the table
 #binaries_table = Table.read('raw_data/all_columns_catalog.fits.gz')
 #binaries = binaries_table[['source_id1', 'source_id2', 'ra1', 'ra2', 'dec1', 'dec2', 'parallax1', 'parallax2', 'parallax_error1', 'parallax_error2', 'pmra1', 'pmra2', 'pmdec1', 'pmdec2', 'dr2_radial_velocity1', 'dr2_radial_velocity2', 'phot_g_mean_mag1', 'phot_g_mean_mag2', 'bp_rp1', 'bp_rp2']]
-print("about to read the data, this takes a sec")
+
 #pares the table down to just the columns we want
 #this line currently works with a downloaded .fits.gz file, it may need to be adjusted once the query is working
 binaries = Table.read('all_columns_catalog.fits.gz')[['source_id1', 'source_id2', 'ra1', 'ra2', 'dec1', 'dec2', 'parallax1', 'parallax2', 'parallax_error1', 'parallax_error2', 'pmra1', 'pmra2', 'pmdec1', 'pmdec2', 'dr2_radial_velocity1', 'dr2_radial_velocity2', 'phot_g_mean_mag1', 'phot_g_mean_mag2', 'bp_rp1', 'bp_rp2']]

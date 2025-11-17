@@ -109,7 +109,7 @@ data.remove_rows(np.where(data['plx']<=0.0)[0])
 data.remove_rows(np.where(data['memberprob']<0.5)[0])
 
 # %
-data.write('gc.fits', overwrite=True)
+#data.write('gc.fits', overwrite=True)
 
 # %
 #data = Table.read('gc.fits')
@@ -230,18 +230,18 @@ cluster_names = unique(data, keys='cluster_name')['cluster_name']
 # %
 from astroquery.vizier import Vizier
 # #reading in the catalogue
-#catalog = Vizier(catalog='J/MNRAS/505/5978', columns=['**'], row_limit=-1).query_constraints()
-#clusters = catalog[0]
-#clusters
-
+catalog = Vizier(catalog='J/MNRAS/505/5978', columns=['**'], row_limit=-1).query_constraints()
+clusters = catalog[0]
+clusters
 # %
 # The table read in the commented out code in the previous cell usefully provides the mean parallaxes of each cluster
 # The cluster names in that table don't exactly match the ones we have, so the following table is a custom correlation table
-#clustable = Table.to_pandas(clusters)
-#clustable.to_csv("globclusters.csv", index=False, encoding='utf-8')
-
+cluster_names_col = cluster_names.data
+clustable = Table.to_pandas(clusters)
+clustable = clustable.assign(cluster_names_col=cluster_names_col)
+clustable = clustable.rename(columns={'cluster_names_col': 'bonus_column'})
+clustable.to_csv("globclusters.csv", index=False, encoding='utf-8')
 clusters = Table.read('globclusters.csv')
-
 # %
 def angle_radius(rscale_theta, distance):
     return distance*np.tan(rscale_theta)
